@@ -1,0 +1,35 @@
+# log4rs.yaml
+
+# 热更新配置（可选）
+refresh_rate: 30 seconds
+
+appenders:
+  # 控制台输出
+  console:
+    kind: console
+    encoder:
+      pattern: "{d} {h({l})} {M}:{L} - {m}{n}"
+
+  # INFO 级别日志文件（按时间滚动）
+  rolling_file_appender:
+    kind: rolling_file
+    path: "logs/submiter.log"
+    append: true
+    encoder:
+      pattern: "{d} {h({l})} {M}:{L} - {m}{n}"
+    policy:
+      kind: compound
+      trigger:
+        kind: size
+        limit: 512 MB # 文件达到 Xß MB 时滚动
+      roller:
+        kind: fixed_window
+        base: 1
+        count: 5
+        pattern: "logs/submiter.log.{}"
+
+# 根日志记录器配置
+root:
+  level: debug # 根日志的最低级别
+  appenders:
+    - rolling_file_appender
